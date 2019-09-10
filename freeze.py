@@ -13,7 +13,8 @@ def freeze_graph(model_folder):
     absolute_model_folder = "/".join(input_checkpoint.split('/')[:-1])
     output_graph = absolute_model_folder + "/frozen_model.pb"
  
-    output_node_names = "softmax_cross_entropy_with_logits_sg"
+    #output_node_names = "softmax_cross_entropy_with_logits_sg"
+    output_node_names = "softmax/Softmax"
     clear_devices = True
     
     # We import the meta graph and retrive a Saver
@@ -24,6 +25,8 @@ def freeze_graph(model_folder):
  
     with tf.Session() as sess:
         saver.restore(sess, input_checkpoint)
+        for n in input_graph_def.node:
+          print(n.name)
  
         # We use a built-in TF helper to export variables to constant
         output_graph_def = graph_util.convert_variables_to_constants(
