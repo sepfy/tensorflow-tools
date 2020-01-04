@@ -14,7 +14,7 @@ sess = tf.Session(config=
 '''
 sess = tf.Session()
 '''
-with gfile.FastGFile("mnist_frozen_model.pb", "rb") as f:
+with gfile.FastGFile("cifar_frozen_model.pb", "rb") as f:
     graph_def = tf.GraphDef()
     graph_def.ParseFromString(f.read())
     sess.graph.as_default()
@@ -28,11 +28,12 @@ for op in sess.graph.get_operations():
 
 x = sess.graph.get_tensor_by_name("input:0")
 softmax = sess.graph.get_tensor_by_name("softmax:0")
-for i in range(100000):
-  batch_xs = np.random.random_sample((1, 28, 28, 1))
-  print(batch_xs.shape)
-  start = getms()
-  out = sess.run(softmax, feed_dict={x: batch_xs})
-  print(out)
-  print("forward...... " + str(getms() - start) + " ms")
+batch_xs = np.random.random_sample((1, 32, 32, 3))
+out = sess.run(softmax, feed_dict={x: batch_xs})
+#print(batch_xs.shape)
+batch_xs = np.random.random_sample((1, 32, 32, 3))
+start = getms()
+out = sess.run(softmax, feed_dict={x: batch_xs})
+#print(out)
+print("forward...... " + str(getms() - start) + " ms")
 
